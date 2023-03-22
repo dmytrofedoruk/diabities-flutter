@@ -137,7 +137,7 @@ class HomeProvider with ChangeNotifier {
   onItemChanged(String value) {
     log("change called");
 
-    deviceListModel!.data = deviceListModel!.data!.where((select) => select.metadata!.name!.toLowerCase().startsWith(value.toLowerCase())).toList();
+    deviceListModel!.data = deviceListModel!.data!.where((select) => select.metadata!.name!.toLowerCase().contains(value.toLowerCase())).toList();
 
     log("found items length" + deviceListModel!.data!.length.toString());
     notifyListeners();

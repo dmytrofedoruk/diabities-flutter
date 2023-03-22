@@ -201,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> with AppbarMixin {
                                         }
                                       },
                                       child: SmartDeviceBox(
-                                        smartDeviceName: device.metadata?.name ?? "",
+                                        smartDeviceName: device.metadata!.name! + index.toString(),
                                         deviceType: device.productData?.productArchetype ?? "",
                                         iconPath: "assets/light-bulb.png",
                                         powerOn: true,
