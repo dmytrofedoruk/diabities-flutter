@@ -31,36 +31,6 @@ class DeviceDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Color getColor(Device device) {
-  //   double x = device.color!.xy!.x!; // the given x value
-  //   double y = device.color!.xy!.y!; // the given y value
-  //   // log(x.toString());
-  //   // log(y.toString());
-  //   double z = 1.0 - x - y;
-  //   double Y = device.dimming?.brightness?.toDouble() ?? 100.0; // The given brightness value
-  //   double X = (Y / y) * x;
-  //   double Z = (Y / y) * z;
-
-  //   double r = X * 1.656492 - Y * 0.354851 - Z * 0.255038;
-  //   double g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
-  //   double b = X * 0.051713 - Y * 0.121364 + Z * 1.011530;
-  //   // log(r.toString());
-  //   // log(g.toString());
-  //   // log(b.toString());
-  //   // r = r <= 0.0031308 ? 12.92 * r : (1.0 + 0.055) * math.pow(r, (1.0 / 2.4)) - 0.055;
-  //   // g = g <= 0.0031308 ? 12.92 * g : (1.0 + 0.055) * math.pow(g, (1.0 / 2.4)) - 0.055;
-  //   // b = b <= 0.0031308 ? 12.92 * b : (1.0 + 0.055) * math.pow(b, (1.0 / 2.4)) - 0.055;
-
-  //   r = r * 255.0;
-  //   g = g * 255.0;
-  //   b = b * 255.0;
-  //   log(r.toString());
-  //   log(g.toString());
-  //   log(b.toString());
-
-  //   return Color.fromRGBO(r.round(), g.round(), b.round(), 1.0);
-  // }
-
   Future<void> getDeviceDetails({
     required BuildContext context,
     required String deviceId,
@@ -140,27 +110,6 @@ class DeviceDetailsProvider with ChangeNotifier {
 
     // Return RGB color as list of integers
     return Color.fromRGBO(R, G, B, 1);
-  }
-
-  getcolor(double Xvalue, double yValue, double brightness) {
-    double x = Xvalue; // the given x value
-    double y = yValue; // the given y value
-    double z = 1.0 - x - y;
-    double Y = brightness; // The given brightness value
-    double X = (Y / y) * x;
-    double Z = (Y / y) * z;
-
-    double r = X * 1.656492 - Y * 0.354851 - Z * 0.255038;
-    double g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
-    double b = X * 0.051713 - Y * 0.121364 + Z * 1.011530;
-
-    r = r <= 0.0031308 ? 12.92 * r : (1.0 + 0.055) * math.pow(r, (1.0 / 2.4)) - 0.055;
-    g = g <= 0.0031308 ? 12.92 * g : (1.0 + 0.055) * math.pow(g, (1.0 / 2.4)) - 0.055;
-    b = b <= 0.0031308 ? 12.92 * b : (1.0 + 0.055) * math.pow(b, (1.0 / 2.4)) - 0.055;
-    log(r.toString());
-    log(g.toString());
-    log(b.toString());
-    return Color.fromRGBO(r.toInt(), g.toInt(), b.toInt(), 1);
   }
 
   Future<void> changeLightColors({

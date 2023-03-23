@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme,
+        
         initialRoute: "/",
         navigatorKey: navigatorKey,
         title: "Lighthouse",

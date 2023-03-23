@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_color_models/flutter_color_models.dart';
@@ -7,6 +10,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:lighthouse/helpers/colorHelper.dart';
 import 'package:lighthouse/mixins/appbar_mixins.dart';
 import 'package:lighthouse/providers/device_details_provider.dart';
+import 'package:lighthouse/views/device_detail/device_settings/device_settings.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
@@ -35,6 +39,7 @@ class _DeviceDetailsState extends State<DeviceDetails> with AppbarMixin {
     super.initState();
   }
 
+  bool isDefault = false;
   Color? color;
   @override
   Widget build(BuildContext context) {
@@ -54,7 +59,23 @@ class _DeviceDetailsState extends State<DeviceDetails> with AppbarMixin {
       bool? isOn = device?.on?.on ?? false;
 
       return Scaffold(
-          appBar: baseStyleAppBar(title: device?.metadata?.name ?? ""),
+          appBar: baseStyleAppBar(title: device?.metadata?.name ?? "", actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DeviceSettings(
+                            deviceId: widget.deviceId,
+                          )));
+                },
+                icon: Icon(Icons.settings)),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    isDefault = !isDefault;
+                  });
+                },
+                icon: Icon(isDefault ? CommunityMaterialIcons.heart : CommunityMaterialIcons.heart_outline))
+          ]),
           body: provider.isLoading || device == null
               ? const Center(
                   child: CircularProgressIndicator(
@@ -127,7 +148,7 @@ class _DeviceDetailsState extends State<DeviceDetails> with AppbarMixin {
                             ),
                             Slider(
                               value: device!.dimming!.brightness!.toDouble(),
-                              min: 20,
+                              min: 0,
                               max: 100,
                               divisions: 80,
                               activeColor: const Color.fromRGBO(211, 243, 107, 1),

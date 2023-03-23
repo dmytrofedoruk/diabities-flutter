@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lighthouse/views/theme/colors.dart';
 import 'package:provider/provider.dart';
 
-String enfontFamily = 'NotoSansJP';
+// String enfontFamily = ;
 String arbiFontFamily = 'Tajawal';
 
 ButtonStyle _buildButtonStyleData(
@@ -216,13 +217,7 @@ TextTheme _buildTextTheme(TextTheme base, String fontFamily, Color color, Color 
 ThemeData getCustomThemeData(BuildContext context, {Brightness? brightness}) {
   final ThemeData base = brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
   final ColorTheme colorTheme = brightness == Brightness.dark ? colorThemeDark : colorThemeLight;
-  final TextTheme textTheme = _buildTextTheme(
-    base.textTheme,
-    enfontFamily,
-    colorTheme.textColor,
-    colorTheme.textSecondaryColor,
-    colorTheme.textThirdColor,
-  );
+  final TextTheme textTheme = GoogleFonts.bebasNeueTextTheme();
 
   final ColorScheme colorScheme = base.colorScheme.copyWith(
     surface: colorTheme.surfaceColor,

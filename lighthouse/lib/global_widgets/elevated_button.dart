@@ -31,7 +31,7 @@ class CustomButton extends StatelessWidget {
                 Radius.circular(35.7),
               )),
           child: Center(
-            child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+            child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, color: textColor, fontSize: 16)),
           ),
         ));
   }

@@ -29,7 +29,10 @@ class AppbarMixin {
     return AppBar(
       leading: automaticallyImplyLeading ? leadingView : null,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(fontSize: 18),
+      ),
       actions: actions,
       leadingWidth: 68,
     );
