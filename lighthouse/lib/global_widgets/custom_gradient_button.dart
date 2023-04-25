@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomGradientButton extends StatelessWidget {
   final String text;
   final double width;
   final VoidCallback onpressed;
   Color backgroundColor;
   Color borderColor;
   Color textColor;
-  CustomButton(this.text,
+  CustomGradientButton(this.text,
       {Key? key,
       this.width = double.infinity,
       required this.onpressed,
@@ -25,7 +25,16 @@ class CustomButton extends StatelessWidget {
           height: 50,
           width: width,
           decoration: BoxDecoration(
-              color: backgroundColor,
+              // color: backgroundColor,
+              gradient: const LinearGradient(
+                  colors: [
+                    Color.fromRGBO(35, 60, 133, 1),
+                    Color.fromRGBO(46, 120, 184, 1),
+                  ],
+                  begin: FractionalOffset(0.0, 0.0),
+                  end: FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp),
               border: Border.all(color: borderColor),
               borderRadius: const BorderRadius.all(
                 Radius.circular(10.7),

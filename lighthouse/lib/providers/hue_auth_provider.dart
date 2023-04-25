@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:lighthouse/models/link_button_model.dart';
 import 'package:lighthouse/models/token_model.dart';
 import 'package:lighthouse/providers/homeProvider.dart';
-import 'package:lighthouse/services/auth_service.dart';
-import 'package:lighthouse/views/home/homeScreen.dart';
+import 'package:lighthouse/services/hue_auth_service.dart';
+import 'package:lighthouse/views/hue_home/hue_homeScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/AppConstants.dart';
 import '../helpers/Utils.dart';
 
-class AuthProvider with ChangeNotifier {
-  AuthProvider(this.sharedPreferences);
+class HueAuthProvider with ChangeNotifier {
+  HueAuthProvider(this.sharedPreferences);
   TokensModel? tokensModel;
   bool isLoading = false;
   final SharedPreferences sharedPreferences;
@@ -31,16 +31,27 @@ class AuthProvider with ChangeNotifier {
   }
 
   accessTokenChanged(TokensModel? newtokensModel, BuildContext context) async {
+    log("access token ch");
     if (newtokensModel != null) {
       tokensModel = newtokensModel;
       Navigator.pop(context);
-      await sharedPreferences.setString(AppConstants.tokenKey, newtokensModel.accessToken!);
+      await sharedPreferences.setString(AppConstants.HuetokenKey, newtokensModel.accessToken!);
       await sharedPreferences.setString(AppConstants.refreshtokenKey, newtokensModel.refreshToken!);
-      var provider = Provider.of<HomeProvider>(context, listen: false);
-      Provider.of<HomeProvider>(context, listen: false);
-      provider.pressLinkButton(context).then((value) => provider.getApplicationKeyOrUserName(context));
+      var provider = Provider.of<HueProvider>(context, listen: false);
+      Provider.of<HueProvider>(context, listen: false);
+      await provider.pressLinkButton(context).then((value) async {
+        log(value.toString());
+        if (value) {
+          log("link button pressed");
+          await provider.getApplicationKeyOrUserName(context);
+        } else {
+          Utils.toast("The bridge seems to be offline.");
+        }
+      });
 
       notifyListeners();
+    } else {
+      log("access token changed");
     }
   }
 }

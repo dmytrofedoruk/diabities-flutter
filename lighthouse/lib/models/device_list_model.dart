@@ -15,11 +15,11 @@ class DeviceListModel {
   });
 
   List<dynamic>? errors;
-  List<Datum>? data;
+  List<HueLight>? data;
 
   factory DeviceListModel.fromMap(Map<String, dynamic> json) => DeviceListModel(
         errors: json["errors"] == null ? [] : List<dynamic>.from(json["errors"]!.map((x) => x)),
-        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromMap(x))),
+        data: json["data"] == null ? [] : List<HueLight>.from(json["data"]!.map((x) => HueLight.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -28,8 +28,8 @@ class DeviceListModel {
       };
 }
 
-class Datum {
-  Datum({
+class HueLight {
+  HueLight({
     this.id,
     this.productData,
     this.metadata,
@@ -47,7 +47,7 @@ class Datum {
   String? type;
   String? idV1;
 
-  factory Datum.fromMap(Map<String, dynamic> json) => Datum(
+  factory HueLight.fromMap(Map<String, dynamic> json) => HueLight(
         id: json["id"],
         productData: json["product_data"] == null ? null : ProductData.fromMap(json["product_data"]),
         metadata: json["metadata"] == null ? null : Metadata.fromMap(json["metadata"]),

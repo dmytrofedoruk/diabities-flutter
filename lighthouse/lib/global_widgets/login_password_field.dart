@@ -17,18 +17,20 @@ class _LoginPasswordInputState extends State<LoginPasswordInput> {
 
   @override
   Widget build(BuildContext context) {
-    return InputTextField(
-      label: "",
+    return TextField(
+      style: const TextStyle(
+        color: Colors.white,
+      ),
       onChanged: (value) => widget.onChanged(value),
       obscureText: isSecure,
       decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.circular(25.7),
+            borderSide: const BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(10.7),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.grey),
-            borderRadius: BorderRadius.circular(25.7),
+            borderSide: const BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(10.7),
           ),
           hintText: "Password",
           // prefixIcon: Icon(
@@ -44,7 +46,7 @@ class _LoginPasswordInputState extends State<LoginPasswordInput> {
             icon: Icon(
               isSecure ? Icons.visibility_off : Icons.visibility,
               size: 20,
-              color: Theme.of(context).textTheme.overline?.color,
+              color: Theme.of(context).primaryColor,
             ),
           )),
     );

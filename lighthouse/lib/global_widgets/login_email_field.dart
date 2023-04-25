@@ -11,21 +11,22 @@ class LoginUserInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InputTextField(
-      label: "",
+    return TextField(
+      style:const TextStyle(color: Colors.white),
       onChanged: (value) {
         onChanged(value);
       },
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black),
-          borderRadius: BorderRadius.circular(25.7),
+          borderSide: const BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(10.7),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(25.7),
+          borderSide: const BorderSide(color: Colors.white60),
+          borderRadius: BorderRadius.circular(10.7),
         ),
         hintText: hintText,
+        // hintStyle: TextStyle()
         // prefixIcon: Icon(
         //   Icons.person,
         //   size: 20,

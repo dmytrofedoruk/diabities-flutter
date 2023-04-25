@@ -69,6 +69,7 @@ class InputTextField extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: TextFormField(
+        style: TextStyle(color: Colors.white),
         controller: controller,
         focusNode: focusNode,
         initialValue: initialValue,

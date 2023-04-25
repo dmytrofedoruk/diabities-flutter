@@ -5,17 +5,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/models/device_list_model.dart';
 import 'package:lighthouse/models/token_model.dart';
-import 'package:lighthouse/services/home_service.dart';
+import 'package:lighthouse/services/hue_home_service.dart';
+import 'package:lighthouse/views/auth/joining_screens/joinning_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/AppConstants.dart';
 import '../helpers/Utils.dart';
-import '../services/auth_service.dart';
+import '../services/hue_auth_service.dart';
 import '../views/auth/login/loginScreen.dart';
-import '../views/home/homeScreen.dart';
+import '../views/hue_home/hue_homeScreen.dart';
 
-class HomeProvider with ChangeNotifier {
-  HomeProvider(this.sharedPreferences);
+class HueProvider with ChangeNotifier {
+  HueProvider(this.sharedPreferences);
   TokensModel? tokensModel;
   bool isLoading = false;
   final SharedPreferences sharedPreferences;
@@ -33,17 +34,18 @@ class HomeProvider with ChangeNotifier {
   }
 
   void logOut(BuildContext context) {
-    sharedPreferences.setString(AppConstants.tokenKey, "");
+    sharedPreferences.setString(AppConstants.ApplicationtokenKey, "");
+    sharedPreferences.setString(AppConstants.HuetokenKey, "");
     sharedPreferences.setString(AppConstants.userNameKey, "");
     sharedPreferences.setString(AppConstants.refreshtokenKey, "");
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen()), (Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const JoiningScreen()), (Route<dynamic> route) => false);
   }
 
   bool isHueToken = false;
 
   Future<bool> canpressLoginButton() async {
     var token = sharedPreferences.getString(
-      AppConstants.tokenKey,
+      AppConstants.HuetokenKey,
     );
 
     if (token != null && token.isNotEmpty) {
@@ -55,27 +57,33 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  Future<void> pressLinkButton(
+  Future<bool> pressLinkButton(
     BuildContext context,
   ) async {
+    bool returnvalue = false;
     isHueToken = true;
     showOrHideLoader(true);
 
     var token = sharedPreferences.getString(
-      AppConstants.tokenKey,
+      AppConstants.HuetokenKey,
     );
-    var result = await AuthService.configLinkButton(token: token.toString());
+    var result = await HueAuthService.configLinkButton(token: token.toString());
+    showOrHideLoader(false);
 
     if (result != null) {
       log("Link button pressed succesfully");
+      showOrHideLoader(false);
+      returnvalue = true;
     } else {
-      log(result.toString());
-      Utils.errorSnackBar(context, "Something went wrong");
-      sharedPreferences.setString(AppConstants.tokenKey, "");
+      log("configLinkButton " + result.toString());
       isHueToken = false;
+
+      await sharedPreferences.setString(AppConstants.HuetokenKey, "");
+
+      returnvalue = false;
+      notifyListeners();
     }
-    showOrHideLoader(false);
-    notifyListeners();
+    return returnvalue;
   }
 
   Future<void> getApplicationKeyOrUserName(
@@ -84,9 +92,9 @@ class HomeProvider with ChangeNotifier {
     showOrHideLoader(true);
     notifyListeners();
     var token = sharedPreferences.getString(
-      AppConstants.tokenKey,
+      AppConstants.HuetokenKey,
     );
-    var result = await AuthService.getApplicationKeyOrUserName(token: token.toString());
+    var result = await HueAuthService.getApplicationKeyOrUserName(token: token.toString());
 
     if (result != null) {
       sharedPreferences.setString(AppConstants.userNameKey, result.success?.username ?? "");
@@ -94,26 +102,26 @@ class HomeProvider with ChangeNotifier {
       getDeviceList(context);
     } else {
       Utils.errorSnackBar(context, "Something went wrong");
-      sharedPreferences.setString(AppConstants.tokenKey, "");
+      sharedPreferences.setString(AppConstants.HuetokenKey, "");
       isHueToken = false;
     }
     showOrHideLoader(false);
     notifyListeners();
   }
 
-  Future<void> getDeviceList(
+  Future<List<HueLight>?> getDeviceList(
     BuildContext context,
   ) async {
     showOrHideLoader(true);
     notifyListeners();
     var token = sharedPreferences.getString(
-      AppConstants.tokenKey,
+      AppConstants.HuetokenKey,
     );
     var userName = sharedPreferences.getString(
       AppConstants.userNameKey,
     );
     log("token: $token");
-    var result = await HomeService.getdeviceList(token: token.toString(), userName: userName.toString());
+    var result = await HueHomeService.getdeviceList(token: token.toString(), userName: userName.toString());
 
     if (result != null) {
       log("get devices succesfully");
@@ -132,6 +140,7 @@ class HomeProvider with ChangeNotifier {
     }
     showOrHideLoader(false);
     notifyListeners();
+    return deviceListModel!.data;
   }
 
   onItemChanged(String value) {

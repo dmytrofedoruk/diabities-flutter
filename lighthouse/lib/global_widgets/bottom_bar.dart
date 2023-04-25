@@ -97,24 +97,26 @@ class _BottomBarDefaultState extends State<BottomBarDefault> with TickerProvider
     );
     isShadow = widget.enableShadow!;
     Color itemColor = isSelected ? widget.colorSelected : widget.color;
+    Color textColor = isSelected ? Colors.white : widget.color;
     if (widget.animated) {
       return AnimatedBuilder(
         animation: _animationList[index],
         builder: (context, child) {
           return Transform.scale(
             scale: _animationList[index].value,
-            child: buildContentItem(item, itemColor, padDefault),
+            child: buildContentItem(item, itemColor, padDefault, textColor),
           );
         },
       );
     }
-    return buildContentItem(item, itemColor, padDefault);
+    return buildContentItem(item, itemColor, padDefault, itemColor);
   }
 
   Widget buildContentItem(
     TabItem item,
     Color itemColor,
     EdgeInsets padDefault,
+    Color textcolor,
   ) {
     return Container(
       width: double.infinity,
@@ -133,7 +135,7 @@ class _BottomBarDefaultState extends State<BottomBarDefault> with TickerProvider
             SizedBox(height: widget.pad),
             Text(
               item.title!,
-              style: Theme.of(context).textTheme.overline?.merge(widget.titleStyle).copyWith(color: itemColor),
+              style: Theme.of(context).textTheme.overline?.merge(widget.titleStyle).copyWith(color: textcolor, fontSize: 8),
               textAlign: TextAlign.center,
             )
           ],
@@ -168,6 +170,15 @@ class _BottomBarDefaultState extends State<BottomBarDefault> with TickerProvider
     return BuildLayout(
       decoration: BoxDecoration(
         color: widget.backgroundColor,
+        gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(35, 60, 133, 1),
+              Color.fromRGBO(18, 13, 66, 1),
+            ],
+            begin: FractionalOffset(0.0, 0.0),
+            end: FractionalOffset(1.0, 0.0),
+            stops: [0.0, 1.0],
+            tileMode: TileMode.clamp),
         borderRadius: widget.borderRadius,
         boxShadow: widget.boxShadow ?? shadow,
       ),
@@ -196,12 +207,42 @@ class _BottomBarDefaultState extends State<BottomBarDefault> with TickerProvider
                               }
                             }
                           : null,
-                      child: buildItem(
-                        context,
-                        item: widget.items[index],
-                        index: index,
-                        isSelected: index == _selectedIndex!,
-                      ),
+                      child: index == 2
+                          ? Center(
+                              child: AnimatedBuilder(
+                                  animation: _animationList[index],
+                                  builder: (context, child) {
+                                    return Transform.scale(
+                                      scale: _animationList[index].value,
+                                      child: Container(
+                                          // margin: EdgeInsets.all(10),
+                                          height: 45,
+                                          width: 45,
+                                          decoration: BoxDecoration(
+                                            // color: Colors.white,
+                                            borderRadius: BorderRadius.circular(100),
+                                            gradient: const LinearGradient(
+                                                colors: [
+                                                  Color.fromRGBO(35, 60, 133, 1),
+                                                  Color.fromRGBO(46, 120, 184, 1),
+                                                ],
+                                                begin: FractionalOffset(0.0, 0.0),
+                                                end: FractionalOffset(1.0, 0.0),
+                                                stops: [0.0, 1.0],
+                                                tileMode: TileMode.clamp),
+                                          ),
+                                          child: const Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                          )),
+                                    );
+                                  }))
+                          : buildItem(
+                              context,
+                              item: widget.items[index],
+                              index: index,
+                              isSelected: index == _selectedIndex!,
+                            ),
                     ),
                   );
                 }),

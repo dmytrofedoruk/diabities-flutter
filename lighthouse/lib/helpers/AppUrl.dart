@@ -1,6 +1,9 @@
 class AppUrl {
   static const String baseURL = 'https://reminiscent-chill-actress.glitch.me/';
 
+  static const String signupInLightHouse = '${baseURL}signup';
+  static const String loginInLightHouse = '${baseURL}login';
+  static const String subscriptionCheckLightHouse = '${baseURL}check-subscription';
   static const String config = '${baseURL}config';
   static const String devicesList = '${baseURL}deviceList';
   static const String light = '${baseURL}light/';

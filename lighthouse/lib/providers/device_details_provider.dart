@@ -4,18 +4,18 @@ import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_color_models/flutter_color_models.dart';
-import 'package:hue_dart/hue_dart.dart';
+
 import 'package:lighthouse/models/device_details_model.dart';
 import 'package:lighthouse/models/token_model.dart';
-import 'package:lighthouse/services/device_service.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/AppConstants.dart';
 import '../helpers/Utils.dart';
+import '../services/hue_device_service.dart';
 
-class DeviceDetailsProvider with ChangeNotifier {
-  DeviceDetailsProvider(this.sharedPreferences);
+class HueDeviceDetailsProvider with ChangeNotifier {
+  HueDeviceDetailsProvider(this.sharedPreferences);
   TokensModel? tokensModel;
   bool isLoading = false;
   final SharedPreferences sharedPreferences;
@@ -31,21 +31,21 @@ class DeviceDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDeviceDetails({
+  Future<DeviceDetailsModel?> getDeviceDetails({
     required BuildContext context,
     required String deviceId,
   }) async {
     showOrHideLoader(true);
     deviceDetailsModel = null;
     var token = sharedPreferences.getString(
-      AppConstants.tokenKey,
+      AppConstants.HuetokenKey,
     );
     var userName = sharedPreferences.getString(
       AppConstants.userNameKey,
     );
     log("token: $token");
     log("userName: $userName");
-    var result = await DeviceService.getdeviceDetails(token: token.toString(), deviceID: deviceId, userName: userName.toString());
+    var result = await HueDeviceService.getdeviceDetails(token: token.toString(), deviceID: deviceId, userName: userName.toString());
 
     if (result != null) {
       log("get device details succesfully");
@@ -58,6 +58,7 @@ class DeviceDetailsProvider with ChangeNotifier {
     }
     showOrHideLoader(false);
     notifyListeners();
+   return deviceDetailsModel;
   }
 
   Future<void> turnOnOrOffLight({
@@ -68,14 +69,14 @@ class DeviceDetailsProvider with ChangeNotifier {
     showOrHideLoader(true);
     notifyListeners();
     var token = sharedPreferences.getString(
-      AppConstants.tokenKey,
+      AppConstants.HuetokenKey,
     );
     var userName = sharedPreferences.getString(
       AppConstants.userNameKey,
     );
     log("token: $token");
     log("userName: $userName");
-    var result = await DeviceService.turnOnOrOffLight(token: token.toString(), deviceID: deviceId, userName: userName.toString(), isturnOn: isOn);
+    var result = await HueDeviceService.turnOnOrOffLight(token: token.toString(), deviceID: deviceId, userName: userName.toString(), isturnOn: isOn);
 
     if (result != null) {
       inspect(result["errors"]);
@@ -121,14 +122,14 @@ class DeviceDetailsProvider with ChangeNotifier {
     showOrHideLoader(true);
     notifyListeners();
     var token = sharedPreferences.getString(
-      AppConstants.tokenKey,
+      AppConstants.HuetokenKey,
     );
     var userName = sharedPreferences.getString(
       AppConstants.userNameKey,
     );
     log("token: $token");
     log("userName: $userName");
-    var result = await DeviceService.changeColorLight(
+    var result = await HueDeviceService.changeColorLight(
         token: token.toString(), deviceID: deviceID, userName: userName.toString(), brightness: brightness, color: color);
 
     if (result != null) {

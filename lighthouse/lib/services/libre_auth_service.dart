@@ -13,7 +13,7 @@ class LibreAuthService {
   }) async {
     String url = AppUrl.libreLinkupLogin;
 
-    var body = {"email": email, "password": password};
+    var body = {"email": "waynemillskidals@gmail.com", "password": "w4tchm4n!"};
 
     dev.log(jsonEncode(body));
     try {

@@ -1,18 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/global_widgets/elevated_button.dart';
 import 'package:lighthouse/helpers/Utils.dart';
 import 'package:lighthouse/mixins/loading_mixin.dart';
-import 'package:lighthouse/providers/dashboard_provider.dart';
+
 import 'package:lighthouse/providers/libre_auth_provider.dart';
-import 'package:lighthouse/views/auth/autroize/authroize_webview.dart';
-import 'package:lighthouse/views/auth/otp/otp_screen.dart';
-import 'package:lighthouse/views/dashboard/dashboard_tabs.dart';
-import 'package:lighthouse/views/home/homeScreen.dart';
-import 'package:lighthouse/views/theme/colors.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../global_widgets/login_email_field.dart';
@@ -37,7 +32,7 @@ class _LibreLoginFormState extends State<LibreLoginForm> with LoadingMixin {
     return Consumer<LibreAuthProvider>(builder: (context, provider, child) {
       return provider.isLoading
           ? Center(
-              child: CircularProgressIndicator(
+              child: CupertinoActivityIndicator(
                 color: Theme.of(context).primaryColor,
               ),
             )
@@ -72,7 +67,7 @@ class _LibreLoginFormState extends State<LibreLoginForm> with LoadingMixin {
                       }
                     },
                     backgroundColor: Colors.orange[900]!,
-                    borderColor: Colors.white,
+                    borderColor: Colors.transparent,
                     textColor: Colors.white,
                   ),
                   const SizedBox(height: 25),

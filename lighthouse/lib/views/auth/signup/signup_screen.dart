@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lighthouse/views/theme/colors.dart';
+import 'package:lighthouse/views/auth/signup/signip_container.dart';
+import 'package:lighthouse/views/auth/signup/signup_form.dart';
 
-import 'login_container.dart';
-import 'login_form.dart';
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-  String greeting() {
-    var hour = DateTime.now().hour;
-    if (hour < 12) {
-      return 'Morning';
-    }
-    if (hour < 17) {
-      return 'Afternoon';
-    }
-    return 'Evening';
-  }
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +12,7 @@ class LoginScreen extends StatelessWidget {
     // String greeting = greeting();
 
     return Scaffold(
-      body: LoginContainer(
+      body: SignUpContainer(
         heading: Column(
           children: [
             Image.asset(
@@ -38,7 +26,7 @@ class LoginScreen extends StatelessWidget {
             // const Text('Lorem ipsum dolor sit amet consectetu', style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400)),
           ],
         ),
-        form: const LoginForm(),
+        form: const SignUpForm(),
       ),
     );
   }

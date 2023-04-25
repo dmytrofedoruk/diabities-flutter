@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
-  final String text;
+class ImageButton extends StatelessWidget {
   final double width;
   final VoidCallback onpressed;
   Color backgroundColor;
   Color borderColor;
-  Color textColor;
-  CustomButton(this.text,
-      {Key? key,
-      this.width = double.infinity,
-      required this.onpressed,
-      this.backgroundColor = Colors.transparent,
-      this.textColor = Colors.white,
-      this.borderColor = Colors.transparent})
-      : super(key: key);
+  String imagePath;
+
+  ImageButton({
+    Key? key,
+    this.width = double.infinity,
+    required this.onpressed,
+    this.backgroundColor = Colors.transparent,
+    this.borderColor = Colors.transparent,
+    required this.imagePath,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class CustomButton extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 10),
           height: 50,
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           width: width,
           decoration: BoxDecoration(
               color: backgroundColor,
@@ -31,7 +32,10 @@ class CustomButton extends StatelessWidget {
                 Radius.circular(10.7),
               )),
           child: Center(
-            child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, color: textColor, fontSize: 15)),
+            child: Image.asset(
+              imagePath,
+              fit: BoxFit.cover,
+            ),
           ),
         ));
   }

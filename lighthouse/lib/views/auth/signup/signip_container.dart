@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LoginContainer extends StatelessWidget {
+class SignUpContainer extends StatelessWidget {
   final Widget heading;
   final Widget form;
   final Widget? footer;
   final Widget? socials;
   final String? subtitleLogin;
 
-  const LoginContainer({
+  const SignUpContainer({
     Key? key,
     required this.heading,
     required this.form,

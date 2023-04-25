@@ -6,29 +6,35 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:lighthouse/helpers/Utils.dart';
+import 'package:lighthouse/mixins/appbar_mixins.dart';
 import 'package:lighthouse/models/token_model.dart';
-import 'package:lighthouse/providers/auth_provider.dart';
+import 'package:lighthouse/providers/hue_auth_provider.dart';
+import 'package:lighthouse/views/auth/joining_screens/joinning_screen.dart';
+import 'package:lighthouse/views/auth/login/loginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class AuthroizeWebview extends StatefulWidget {
-  const AuthroizeWebview({super.key});
+class SubscriptionWebview extends StatefulWidget {
+  final String SubScriptionUrl;
+  const SubscriptionWebview({super.key, required this.SubScriptionUrl});
 
   @override
-  State<AuthroizeWebview> createState() => _AuthroizeWebviewState();
+  State<SubscriptionWebview> createState() => _SubscriptionWebviewState();
 }
 
 bool isLoading = true;
 
-class _AuthroizeWebviewState extends State<AuthroizeWebview> {
+class _SubscriptionWebviewState extends State<SubscriptionWebview> with AppbarMixin {
   late final WebViewController controller;
   response() async {
     String response = await controller.runJavaScriptReturningResult("document.documentElement.innerText") as String;
-    if (response.contains("access_token")) {
-      var tokenModel = tokensModelFromMap(jsonDecode(response));
-      await Provider.of<AuthProvider>(context, listen: false).accessTokenChanged(tokenModel, context);
-      log(tokenModel.accessToken.toString());
-    }
+
+    // if (response.contains("access_token")) {
+    //   var tokenModel = tokensModelFromMap(jsonDecode(response));
+    //   await Provider.of<HueAuthProvider>(context, listen: false).accessTokenChanged(tokenModel, context);
+    //   log(tokenModel.accessToken.toString());
+    // }
     log(response.runtimeType.toString());
     log(jsonDecode(response.toString()));
   }
@@ -43,7 +49,15 @@ class _AuthroizeWebviewState extends State<AuthroizeWebview> {
           onProgress: (int progress) {
             // Update loading bar.
           },
-          onPageStarted: (String url) {},
+          onPageStarted: (String url) {
+            if (url == "https://reminiscent-chill-actress.glitch.me/paymentSuccessPage") {
+              Utils.successSnackBar(context, "Payment successful ");
+              // Add your URL here
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) {
+                return const LoginScreen();
+              }));
+            }
+          },
           onPageFinished: (String url) async {
             log(url);
             isLoading = false;
@@ -58,7 +72,7 @@ class _AuthroizeWebviewState extends State<AuthroizeWebview> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://reminiscent-chill-actress.glitch.me/authorize'));
+      ..loadRequest(Uri.parse(widget.SubScriptionUrl));
     super.initState();
   }
 
@@ -69,6 +83,13 @@ class _AuthroizeWebviewState extends State<AuthroizeWebview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: baseStyleAppBar(title: "Subscription", actions: [
+        IconButton(
+            onPressed: () {
+              controller.reload();
+            },
+            icon: const Icon(Icons.refresh)),
+      ]),
       body: Stack(
         children: [
           isLoading
@@ -78,24 +99,6 @@ class _AuthroizeWebviewState extends State<AuthroizeWebview> {
               : const SizedBox.shrink(),
           Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Cancel")),
-                    IconButton(
-                        onPressed: () {
-                          controller.reload();
-                        },
-                        icon: const Icon(Icons.refresh)),
-                  ],
-                ),
-              ),
               Expanded(
                 child: WebViewWidget(
                   controller: controller,

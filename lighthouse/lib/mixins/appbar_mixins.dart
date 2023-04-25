@@ -27,6 +27,7 @@ class AppbarMixin {
   }) {
     Widget leadingView = leadingWidget ?? leading();
     return AppBar(
+      backgroundColor: Color.fromRGBO(46, 120, 184, 1),
       leading: automaticallyImplyLeading ? leadingView : null,
       automaticallyImplyLeading: automaticallyImplyLeading,
       title: Text(

@@ -26,6 +26,15 @@ class SmartDeviceBox extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: Container(
         decoration: BoxDecoration(
+          gradient: const LinearGradient(
+              colors: [
+                Color.fromRGBO(35, 60, 133, 1),
+                Color.fromRGBO(46, 120, 184, 1),
+              ],
+              begin: FractionalOffset(0.0, 0.0),
+              end: FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp),
           borderRadius: BorderRadius.circular(24),
           color: powerOn ? Colors.grey[900] : Color.fromARGB(44, 164, 167, 189),
         ),

@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../helpers/AppUrl.dart';
 
-class HomeService {
+class HueHomeService {
   static Future<Map<String, dynamic>> getdeviceList({required String token, required String userName}) async {
     String url = AppUrl.devicesList;
     try {

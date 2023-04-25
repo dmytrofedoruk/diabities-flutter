@@ -12,7 +12,7 @@ import 'package:lighthouse/helpers/colorHelper.dart';
 
 import '../helpers/AppUrl.dart';
 
-class DeviceService {
+class HueDeviceService {
   static Future<Map<String, dynamic>> getdeviceDetails({required String token, required deviceID, required String userName}) async {
     String url = AppUrl.light + deviceID;
     try {

@@ -1,18 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:lighthouse/dummyjson.dart';
+import 'package:lighthouse/views/auth/joining_screens/joinning_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 import '../helpers/AppConstants.dart';
 import '../helpers/Utils.dart';
 import '../models/gluco_History_model.dart';
 import '../services/libre_auth_service.dart';
-import '../views/auth/login/loginScreen.dart';
 
 class LibreHomeProvider with ChangeNotifier {
   SharedPreferences sharedPreferences;
@@ -33,11 +31,12 @@ class LibreHomeProvider with ChangeNotifier {
   }
 
   Future<void> logout(BuildContext context) async {
+    sharedPreferences.setString(AppConstants.ApplicationtokenKey, "");
     sharedPreferences.setString(AppConstants.libreTokenKey, "");
     sharedPreferences.setString(AppConstants.librePatientId, "");
     glucoHistoryModel = null;
     notifyListeners();
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen()), (Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const JoiningScreen()), (Route<dynamic> route) => false);
   }
 
   Future<bool> checkLibreTokenExist() async {
@@ -75,11 +74,46 @@ class LibreHomeProvider with ChangeNotifier {
         glucoHistory = result.toString();
         glucoHistoryModel = GlucoHistoryModel.fromMap(result);
         // periodModel = glucoHistoryModel!.data!.periods!.first;
-        if (glucoHistoryModel!.data!.graphData != null && glucoHistoryModel!.data!.graphData!.isNotEmpty) {
+        if (glucoHistoryModel!.data!.graphData != null &&
+            glucoHistoryModel!.data!.graphData != null &&
+            glucoHistoryModel!.data!.graphData!.isNotEmpty) {
+          // var min = glucoHistoryModel!.data!.graphData!.reduce((curr, next) => curr.value! < next.value! ? curr : next).value;
+          // var max = glucoHistoryModel!.data!.graphData!.reduce((curr, next) => curr.value! > next.value! ? curr : next).value;
+          // graphDataPoints.add(_ChartSalesData(
+          //   sales: double.parse(glucoHistoryModel!.data!.graphData!.reduce((curr, next) => curr.value! < next.value! ? curr : next).value.toString()),
+          //   month: glucoHistoryModel!.data!.graphData!.reduce((curr, next) => curr.value! < next.value! ? curr : next).timestamp.toString(),
+          //   color:
+          //   (min! >= 4.0)
+          //       ? Colors.green
+          //       : (min < 4.0)
+          //           ? Colors.yellow
+          //           : Colors.red,
+          // ));
+          // graphDataPoints.add(_ChartSalesData(
+          //   sales: double.parse(glucoHistoryModel!.data!.graphData!.reduce((curr, next) => curr.value! > next.value! ? curr : next).value.toString()),
+          //   month: glucoHistoryModel!.data!.graphData!.reduce((curr, next) => curr.value! > next.value! ? curr : next).timestamp.toString(),
+          //   color: (max! <= 10.0)
+          //       ? Colors.green
+          //       : (max < 4.0)
+          //           ? Colors.yellow
+          //           : Colors.red,
+          // ));
+
+          // For loop for showing all the values
           for (var i = 0; i < glucoHistoryModel!.data!.graphData!.length; i++) {
             var grphData = glucoHistoryModel!.data!.graphData![i];
+            List<String> dateTimeParts = grphData.timestamp!.split(" ");
+
             // var startDate = block.percentile5;
-            graphDataPoints.add(_ChartSalesData(sales: double.parse(grphData.value.toString()), month: grphData.timestamp.toString()));
+            graphDataPoints.add(
+              _ChartSalesData(
+                  sales: double.parse(grphData.value.toString()),
+                  month: grphData.timestamp!.substring(grphData.timestamp!.indexOf(' ') + 1),
+                  color: Colors.white
+
+                  // grphData.value! >= 4 && grphData.value! <= 10 ? Colors.green : Colors.yellow
+                  ),
+            );
           }
           // for (var i = 0; i < glucoHistoryModel!.data!.periods!.first.data!.blocks!.first!.length; i++) {
           //   var block = glucoHistoryModel!.data!.periods!.first.data!.blocks!.first[i];
@@ -127,11 +161,18 @@ class LibreHomeProvider with ChangeNotifier {
           dataSource: graphDataPoints,
           xValueMapper: (_ChartSalesData sales, _) => sales.month,
           yValueMapper: (_ChartSalesData sales, _) => sales.sales,
+          pointColorMapper: (_ChartSalesData data, _) => data.color,
           width: 2,
           name: "Graph Data",
-          markerSettings:
-              MarkerSettings(isVisible: true, height: 4, width: 4, shape: DataMarkerType.circle, borderWidth: 3, borderColor: Colors.blue),
-          dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.outside))
+          markerSettings: const MarkerSettings(
+              color: Colors.white, isVisible: false, height: 4, width: 4, shape: DataMarkerType.circle, borderWidth: 3, borderColor: Colors.white
+              // (graphDataPoints.first.sales >= 4.0 && graphDataPoints.last.sales <= 10.0)
+              //     ? Colors.green
+              //     : (graphDataPoints.last.sales > 10.0)
+              //         ? Colors.red
+              //         : Color.fromRGBO(54, 169, 225, 1)
+              ),
+          dataLabelSettings: const DataLabelSettings(isVisible: false, labelPosition: ChartDataLabelPosition.outside))
       //   LineSeries<_ChartSalesData, String>(
       //       dataSource: persontile25Points,
       //       xValueMapper: (_ChartSalesData sales, _) => sales.month,
@@ -173,8 +214,9 @@ class LibreHomeProvider with ChangeNotifier {
 }
 
 class _ChartSalesData {
-  _ChartSalesData({required this.month, required this.sales});
+  _ChartSalesData({required this.month, required this.sales, required this.color});
 
   final String month;
   final double sales;
+  final Color color;
 }

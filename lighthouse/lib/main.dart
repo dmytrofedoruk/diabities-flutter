@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lighthouse/providers/auth_provider.dart';
+import 'package:lighthouse/providers/app_auth_provider.dart';
+import 'package:lighthouse/providers/hue_auth_provider.dart';
 import 'package:lighthouse/providers/dashboard_provider.dart';
 import 'package:lighthouse/providers/device_details_provider.dart';
 import 'package:lighthouse/providers/homeProvider.dart';
@@ -34,9 +35,10 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => HomeProvider(sharedPreferences)),
-        ChangeNotifierProvider(create: (_) => AuthProvider(sharedPreferences)),
-        ChangeNotifierProvider(create: (_) => DeviceDetailsProvider(sharedPreferences)),
+        ChangeNotifierProvider(create: (_) => AppAuthProvider(sharedPreferences)),
+        ChangeNotifierProvider(create: (_) => HueProvider(sharedPreferences)),
+        ChangeNotifierProvider(create: (_) => HueAuthProvider(sharedPreferences)),
+        ChangeNotifierProvider(create: (_) => HueDeviceDetailsProvider(sharedPreferences)),
         ChangeNotifierProvider(create: (_) => DashBoardProvider()),
         ChangeNotifierProvider(create: (_) => LibreAuthProvider(sharedPreferences)),
         ChangeNotifierProvider(create: (_) => LibreHomeProvider(sharedPreferences)),
@@ -44,7 +46,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme,
-        
         initialRoute: "/",
         navigatorKey: navigatorKey,
         title: "Lighthouse",

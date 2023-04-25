@@ -114,10 +114,12 @@ InputDecorationTheme _buildInputDecorationTheme({
     errorBorder: _buildInputBorder(borderRadius, errorColor, 1),
     disabledBorder: _buildInputBorder(borderRadius, borderColor, 1),
     labelStyle: textTheme.caption,
-    hintStyle: textTheme.caption,
+    hintStyle: textTheme.caption!.copyWith(color: Colors.white),
     helperStyle: textTheme.caption,
     errorStyle: textTheme.overline!.copyWith(color: errorColor),
     errorMaxLines: 5,
+    
+    
   );
 }
 
@@ -217,7 +219,7 @@ TextTheme _buildTextTheme(TextTheme base, String fontFamily, Color color, Color 
 ThemeData getCustomThemeData(BuildContext context, {Brightness? brightness}) {
   final ThemeData base = brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
   final ColorTheme colorTheme = brightness == Brightness.dark ? colorThemeDark : colorThemeLight;
-  final TextTheme textTheme = GoogleFonts.bebasNeueTextTheme();
+  final TextTheme textTheme = GoogleFonts.urbanistTextTheme();
 
   final ColorScheme colorScheme = base.colorScheme.copyWith(
     surface: colorTheme.surfaceColor,
@@ -234,6 +236,7 @@ ThemeData getCustomThemeData(BuildContext context, {Brightness? brightness}) {
     canvasColor: colorTheme.canvasColor,
     textTheme: textTheme,
     colorScheme: colorScheme,
+    hintColor: Colors.white,
     textSelectionTheme: TextSelectionThemeData(cursorColor: colorTheme.cursorColor),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: colorTheme.snackBarBackgroundColor,
@@ -245,7 +248,7 @@ ThemeData getCustomThemeData(BuildContext context, {Brightness? brightness}) {
     appBarTheme: AppBarTheme(
       color: Colors.transparent,
       iconTheme: IconThemeData(
-        color: textTheme.subtitle1?.color,
+        color: colorTheme.primaryColor,
       ),
       titleTextStyle: textTheme.subtitle2,
       centerTitle: true,
@@ -257,9 +260,10 @@ ThemeData getCustomThemeData(BuildContext context, {Brightness? brightness}) {
     inputDecorationTheme: _buildInputDecorationTheme(
       base: base.inputDecorationTheme,
       textTheme: textTheme,
-      borderColor: colorTheme.dividerColor,
-      focusBorderColor: colorTheme.inputFocusBorderColor,
+      borderColor: Colors.white,
+      focusBorderColor: Colors.white,
       errorColor: colorTheme.errorColor,
+      
     ),
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: colorTheme.bottomSheetBackgroundColor,

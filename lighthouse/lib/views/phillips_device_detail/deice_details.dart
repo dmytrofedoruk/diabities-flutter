@@ -10,29 +10,26 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:lighthouse/helpers/colorHelper.dart';
 import 'package:lighthouse/mixins/appbar_mixins.dart';
 import 'package:lighthouse/providers/device_details_provider.dart';
-import 'package:lighthouse/views/device_detail/device_settings/device_settings.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:lighthouse/views/phillips_device_detail/device_settings/device_settings.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'dart:developer' as dev;
 
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
-
 import '../../global_widgets/elevated_button.dart';
 
-class DeviceDetails extends StatefulWidget {
+class HueDeviceDetails extends StatefulWidget {
   final String deviceId;
-  const DeviceDetails({super.key, required this.deviceId});
+  const HueDeviceDetails({super.key, required this.deviceId});
 
   @override
-  State<DeviceDetails> createState() => _DeviceDetailsState();
+  State<HueDeviceDetails> createState() => _HueDeviceDetailsState();
 }
 
-class _DeviceDetailsState extends State<DeviceDetails> with AppbarMixin {
+class _HueDeviceDetailsState extends State<HueDeviceDetails> with AppbarMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var deviceDetailsProvider = Provider.of<DeviceDetailsProvider>(context, listen: false);
+      var deviceDetailsProvider = Provider.of<HueDeviceDetailsProvider>(context, listen: false);
       deviceDetailsProvider.getDeviceDetails(context: context, deviceId: widget.deviceId);
     });
 
@@ -43,7 +40,7 @@ class _DeviceDetailsState extends State<DeviceDetails> with AppbarMixin {
   Color? color;
   @override
   Widget build(BuildContext context) {
-    return Consumer<DeviceDetailsProvider>(builder: (context, provider, child) {
+    return Consumer<HueDeviceDetailsProvider>(builder: (context, provider, child) {
       ColorHelper colorHelper = ColorHelper();
 
       var device = provider.deviceDetailsModel?.data?.first;

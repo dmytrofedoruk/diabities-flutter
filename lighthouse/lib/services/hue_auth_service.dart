@@ -8,7 +8,7 @@ import 'package:lighthouse/models/user_name_model.dart';
 import '../helpers/AppUrl.dart';
 import '../helpers/Utils.dart';
 
-class AuthService {
+class HueAuthService {
   static Future<LinkbuttonModel?> configLinkButton({required String token}) async {
     String url = AppUrl.config;
     try {
@@ -20,8 +20,8 @@ class AuthService {
         'Accept': 'application/json',
         'Authorization': token,
       });
-      // log('login response: ${response.body}');
-      if (response.body != "Something went wrong") {
+      log('loginn response: ${response.body}');
+      if (response.body.trim() != "Something went wrong") {
         var result = jsonDecode(response.body);
         if (response.statusCode == 200) {
           log(result.toString());
@@ -34,7 +34,7 @@ class AuthService {
           return null;
         }
       } else {
-        Utils.toast("Something went wrong");
+        // Utils.toast("The bridge seems to be offline.");
         return null;
       }
     } on SocketException {
@@ -47,6 +47,7 @@ class AuthService {
   }
 
   static Future<UserNameModel?> getApplicationKeyOrUserName({required String token}) async {
+    log("getApplicationKeyOrUserName");
     String url = AppUrl.getUserName;
     try {
       var body = {"devicetype": "tapp"};

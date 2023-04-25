@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:lighthouse/providers/dashboard_provider.dart';
 import 'package:lighthouse/views/dexcom/dexcom_screen.dart';
-import 'package:lighthouse/views/home/homeScreen.dart';
+import 'package:lighthouse/views/hue_home/hue_homeScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../global_widgets/bottom_bar.dart';
 import '../../helpers/style_constants.dart';
 import '../libreview/libreview_screen.dart';
+import '../phillips_device_detail/device_settings/device_settings.dart';
 
 // class HomeScreen extends StatelessWidget {
 //   static const routeName = '/home';
@@ -40,9 +41,13 @@ class _DashBoardTabsState extends State<DashBoardTabs> {
   }
 
   final List<Widget> _widgetOptions = <Widget>[
-    const HomeScreen(),
     const LibreViewScreen(),
+    const HueScreen(),
+    Container(),
     const DexcomHomeScreen(),
+    DeviceSettings(
+      deviceId: "",
+    ),
   ];
 
   @override
@@ -57,6 +62,7 @@ class _DashBoardTabsState extends State<DashBoardTabs> {
     return WillPopScope(
       onWillPop: back,
       child: Scaffold(
+        //
         body: Center(
           child: _widgetOptions.elementAt(Provider.of<DashBoardProvider>(context, listen: false).selectedIndex),
         ),
@@ -64,24 +70,33 @@ class _DashBoardTabsState extends State<DashBoardTabs> {
           items: const [
             TabItem(
               icon: CommunityMaterialIcons.view_dashboard,
-              title: "",
+              title: "Dashboard",
             ),
             TabItem(
-              icon: CommunityMaterialIcons.devices,
-              title: "",
+              icon: CommunityMaterialIcons.lightbulb,
+              title: "Phillips Hue",
             ),
             TabItem(
-              icon: CommunityMaterialIcons.dip_switch,
-              title: "",
+              icon: CommunityMaterialIcons.android,
+              title: "Add",
+            ),
+            TabItem(
+              icon: CommunityMaterialIcons.sack,
+              title: "Dexcom",
+            ),
+            TabItem(
+              icon: CommunityMaterialIcons.account_settings,
+              title: "Settings",
             ),
           ],
           backgroundColor: theme.cardColor,
-          color: theme.textTheme.caption!.color!,
-          colorSelected: theme.primaryColor,
+          color: theme.dividerColor,
+          colorSelected: Color.fromRGBO(54, 169, 225, 1),
           animated: true,
           indexSelected: Provider.of<DashBoardProvider>(context, listen: true).selectedIndex,
           iconSize: 24,
           top: 10,
+          pad: 3,
           bottom: 10,
           titleStyle: theme.textTheme.overline?.copyWith(fontSize: 11, fontWeight: FontWeight.w700),
           boxShadow: StyleConstants.initShadow,
