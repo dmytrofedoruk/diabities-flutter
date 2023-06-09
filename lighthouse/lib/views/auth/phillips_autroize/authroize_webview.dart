@@ -58,7 +58,7 @@ class _AuthroizeWebviewState extends State<AuthroizeWebview> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://reminiscent-chill-actress.glitch.me/authorize'));
+      ..loadRequest(Uri.parse('http://18.185.238.239:3000/authorize'));
     super.initState();
   }
 

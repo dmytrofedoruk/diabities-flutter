@@ -118,8 +118,6 @@ InputDecorationTheme _buildInputDecorationTheme({
     helperStyle: textTheme.caption,
     errorStyle: textTheme.overline!.copyWith(color: errorColor),
     errorMaxLines: 5,
-    
-    
   );
 }
 
@@ -219,7 +217,7 @@ TextTheme _buildTextTheme(TextTheme base, String fontFamily, Color color, Color 
 ThemeData getCustomThemeData(BuildContext context, {Brightness? brightness}) {
   final ThemeData base = brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
   final ColorTheme colorTheme = brightness == Brightness.dark ? colorThemeDark : colorThemeLight;
-  final TextTheme textTheme = GoogleFonts.urbanistTextTheme();
+  final TextTheme textTheme = GoogleFonts.interTextTheme();
 
   final ColorScheme colorScheme = base.colorScheme.copyWith(
     surface: colorTheme.surfaceColor,
@@ -263,7 +261,6 @@ ThemeData getCustomThemeData(BuildContext context, {Brightness? brightness}) {
       borderColor: Colors.white,
       focusBorderColor: Colors.white,
       errorColor: colorTheme.errorColor,
-      
     ),
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: colorTheme.bottomSheetBackgroundColor,

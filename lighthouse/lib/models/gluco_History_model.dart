@@ -1,4 +1,4 @@
-// class GlucoHistoryModel {
+// // class GlucoHistoryModel {
 //   GlucoHistoryModel({
 //     this.status,
 //     this.data,
@@ -664,7 +664,7 @@ class GraphDatum {
   });
 
   String? factoryTimestamp;
-  String? timestamp;
+  DateTime? timestamp;
   int? type;
   int? valueInMgPerDl;
   int? trendArrow;
@@ -672,17 +672,17 @@ class GraphDatum {
   int? measurementColor;
   int? glucoseUnits;
   double? value;
-  bool? isHigh;
-  bool? isLow;
+  String? isHigh;
+  String? isLow;
 
   factory GraphDatum.fromMap(Map<String, dynamic> json) => GraphDatum(
         factoryTimestamp: json["FactoryTimestamp"],
-        timestamp: json["Timestamp"],
-        type: json["type"],
+        timestamp: DateTime.parse(json["timestamp"]),
+        type: int.parse(json["type"].toString()),
         valueInMgPerDl: json["ValueInMgPerDl"],
         trendArrow: json["TrendArrow"],
         trendMessage: json["TrendMessage"],
-        measurementColor: json["MeasurementColor"],
+        measurementColor: int.parse(json["MeasurementColor"].toString()),
         glucoseUnits: json["GlucoseUnits"],
         value: json["Value"]?.toDouble(),
         isHigh: json["isHigh"],

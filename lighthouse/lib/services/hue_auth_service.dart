@@ -61,7 +61,7 @@ class HueAuthService {
       if (response.body != "Something went wrong") {
         var result = jsonDecode(response.body);
         if (response.statusCode == 200) {
-          log(result.toString());
+          log("getApplicationKey" + result.toString());
           return UserNameModel.fromMap(result[0]);
         } else if (response.statusCode == 401) {
           Utils.toast('Unauthorized');

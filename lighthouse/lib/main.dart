@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:lighthouse/providers/EmergencyCallProvider.dart';
 import 'package:lighthouse/providers/app_auth_provider.dart';
+import 'package:lighthouse/providers/dexcom_provider.dart';
 import 'package:lighthouse/providers/hue_auth_provider.dart';
 import 'package:lighthouse/providers/dashboard_provider.dart';
 import 'package:lighthouse/providers/device_details_provider.dart';
-import 'package:lighthouse/providers/homeProvider.dart';
+import 'package:lighthouse/providers/hueHomeProvider.dart';
 import 'package:lighthouse/providers/libre_auth_provider.dart';
 import 'package:lighthouse/providers/libre_home_provider.dart';
 import 'package:lighthouse/views/theme/theme.dart';
@@ -32,6 +35,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = getCustomThemeData(context, brightness: Brightness.light);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
 
     return MultiProvider(
       providers: [
@@ -42,6 +49,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DashBoardProvider()),
         ChangeNotifierProvider(create: (_) => LibreAuthProvider(sharedPreferences)),
         ChangeNotifierProvider(create: (_) => LibreHomeProvider(sharedPreferences)),
+        ChangeNotifierProvider(create: (_) => EmergencyCallProvider(sharedPreferences)),
+        ChangeNotifierProvider(create: (_) => DexcomProvider(sharedPreferences)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

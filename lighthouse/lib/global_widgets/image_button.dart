@@ -34,7 +34,8 @@ class ImageButton extends StatelessWidget {
           child: Center(
             child: Image.asset(
               imagePath,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
+              width: 130,
             ),
           ),
         ));

@@ -10,6 +10,7 @@ class AppAuthService {
   static Future<dynamic> loginInAppLighHouse({required String email, required String password}) async {
     String url = AppUrl.loginInLightHouse;
     try {
+      log(url);
       var body = {"email": email, "password": password};
       log('body: $body');
 

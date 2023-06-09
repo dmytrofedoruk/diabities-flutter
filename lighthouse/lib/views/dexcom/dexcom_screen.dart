@@ -3,10 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lighthouse/global_widgets/custom_gradient_button.dart';
 import 'package:lighthouse/mixins/appbar_mixins.dart';
 import 'package:lighthouse/providers/libre_home_provider.dart';
+import 'package:lighthouse/views/nightScout/nighScout_url/loginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 import '../../global_widgets/elevated_button.dart';
+import '../../global_widgets/image_button.dart';
 import 'dexcom_login/loginScreen.dart';
 
 class DexcomHomeScreen extends StatefulWidget {
@@ -56,60 +58,131 @@ class _DexcomHomeScreenState extends State<DexcomHomeScreen> with AppbarMixin {
                     color: Theme.of(context).primaryColor,
                   ),
                 )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              // Provider.of<LibreHomeProvider>(context, listen: false).checkLibreTokenExist().then((value) {
-                              //   if (value == true) {
-                              //     Provider.of<LibreHomeProvider>(context, listen: false).libreGetData(
-                              //       context: context,
-                              //     );
-                              //   }
-                              // });
-                            },
-                            icon: const Icon(
-                              Icons.refresh,
-                              color: Colors.white,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              // Provider.of<LibreHomeProvider>(context, listen: false).logout(context);
-                            },
-                            icon: const Icon(
-                              Icons.logout,
-                              color: Colors.white,
-                            ))
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              : Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            "Welcome,",
-                            style: GoogleFonts.bebasNeue(fontSize: 16, color: Colors.white),
-                          ),
-                          Text(
-                            provider.glucoHistoryModel?.data?.connection?.firstName ?? 'DashBoard',
-                            style: GoogleFonts.bebasNeue(fontSize: 42, color: Colors.white),
-                          ),
+                          IconButton(
+                              onPressed: () {
+                                // Provider.of<LibreHomeProvider>(context, listen: false).checkLibreTokenExist().then((value) {
+                                //   if (value == true) {
+                                //     Provider.of<LibreHomeProvider>(context, listen: false).libreGetData(
+                                //       context: context,
+                                //     );
+                                //   }
+                                // });
+                              },
+                              icon: const Icon(
+                                Icons.refresh,
+                                color: Colors.white,
+                              )),
+                          IconButton(
+                              onPressed: () {
+                                // Provider.of<LibreHomeProvider>(context, listen: false).logout(context);
+                              },
+                              icon: const Icon(
+                                Icons.logout,
+                                color: Colors.white,
+                              ))
                         ],
                       ),
-                    ),
-                    provider.glucoHistoryModel == null
-                        ? Center(
-                            child: CustomGradientButton(
-                              "Connect With Dexcom",
+                      SizedBox(
+                        height: size.height * 0.05,
+                      ),
+                      Text(
+                        'CGM Settings',
+                        style: theme.textTheme.headlineSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Connect your CGM by pressing the logo below \nPlease ensure ",
+                        style: TextStyle(color: theme.primaryColor, fontSize: size.width * 0.039),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            // color: backgroundColor,
+                            gradient: const LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(35, 60, 133, 1),
+                                  Color.fromRGBO(46, 120, 184, 1),
+                                ],
+                                begin: FractionalOffset(0.0, 0.0),
+                                end: FractionalOffset(1.0, 0.0),
+                                stops: [0.0, 1.0],
+                                tileMode: TileMode.clamp),
+                            border: Border.all(color: Colors.transparent),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10.7),
+                            )),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Please ensure ",
+                              style: TextStyle(color: theme.primaryColor, fontSize: size.width * 0.039, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: theme.accentColor,
+                                  size: size.width * 0.049,
+                                ),
+                                Text(
+                                  " Libre account is LibreLinkup",
+                                  style: TextStyle(color: theme.primaryColor, fontSize: size.width * 0.039),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: theme.accentColor,
+                                  size: size.width * 0.049,
+                                ),
+                                Text(
+                                  " Dexcom is the follower account",
+                                  style: TextStyle(color: theme.primaryColor, fontSize: size.width * 0.039),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            ImageButton(
                               width: size.width * 0.8,
+                              backgroundColor: Colors.white,
+                              imagePath: "assets/freestyle.png",
+                              onpressed: () {},
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            ImageButton(
+                              width: size.width * 0.8,
+                              backgroundColor: Colors.green,
+                              imagePath: "assets/dexcom1.png",
                               onpressed: () {
                                 showModalBottomSheet<void>(
                                   context: context,
@@ -123,65 +196,49 @@ class _DexcomHomeScreenState extends State<DexcomHomeScreen> with AppbarMixin {
                                   ),
                                 );
                               },
-                              backgroundColor: theme.primaryColorDark,
                             ),
-                          )
-                        : ListView(
-                            children: [
-                              Container(
-                                height: 400,
-                                child: SfCartesianChart(
-                                  // title: ChartTitle(text: 'Flutter Chart'),
-                                  legend: Legend(isVisible: true, position: LegendPosition.bottom, padding: 10),
-                                  series: provider.getDefaultData(),
-
-                                  primaryXAxis: CategoryAxis(
-                                      // visibleMaximum: 20,
-                                      // visibleMinimum: 5
-                                      ),
-
-                                  tooltipBehavior: _tooltipBehavior,
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            ImageButton(
+                              width: size.width * 0.8,
+                              backgroundColor: Colors.black,
+                              imagePath: "assets/nightscout.png",
+                              onpressed: () {
+                                showModalBottomSheet<void>(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return const FractionallySizedBox(heightFactor: 0.9, child: NightScoutScreen());
+                                  },
+                                  backgroundColor: theme.primaryColorDark,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Connected ",
+                                  style: TextStyle(color: Colors.white, fontSize: size.width * 0.04, fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              // provider.glucoHistoryModel == null || provider.periodModel == null
-                              //     ? Container()
-                              //     : Container(
-                              //         margin: const EdgeInsets.all(10),
-                              //         padding: const EdgeInsets.all(20),
-                              //         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-                              //         child: Column(
-                              //           children: [
-                              //             Row(
-                              //               children: [
-                              //                 Text(
-                              //                   "Max Glucose Range: ${provider.periodModel!.data!.maxGlucoseRange!.toString()}",
-                              //                   style: GoogleFonts.bebasNeue(fontSize: 16, color: Colors.grey.shade800),
-                              //                 ),
-                              //               ],
-                              //             ),
-                              //             Row(
-                              //               children: [
-                              //                 Text(
-                              //                   "Min Glucose Range: ${provider.periodModel!.data!.minGlucoseRange!.toString()}",
-                              //                   style: GoogleFonts.bebasNeue(fontSize: 16, color: Colors.grey.shade800),
-                              //                 ),
-                              //               ],
-                              //             ),
-                              //             Row(
-                              //               children: [
-                              //                 Text(
-                              //                   "Max Glucose value: ${provider.periodModel!.data!.maxGlucoseValue!.toString()}",
-                              //                   style: GoogleFonts.bebasNeue(fontSize: 16, color: Colors.grey.shade800),
-                              //                 ),
-                              //               ],
-                              //             )
-                              //           ],
-                              // ),
-                              // )
-                              // Text(provider.glucoHistory),
-                            ],
-                          ),
-                  ],
+                                const Icon(
+                                  Icons.fiber_manual_record,
+                                  color: Colors.green,
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
         ),
       );

@@ -4,17 +4,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:lighthouse/helpers/Utils.dart';
-import 'package:lighthouse/models/libre_login_model.dart';
 import 'package:lighthouse/services/app_auth_service.dart';
-import 'package:lighthouse/services/libre_auth_service.dart';
+
 import 'package:lighthouse/views/auth/login/deivce_selection_screen.dart';
 import 'package:lighthouse/views/auth/subscription/subscritption_webview.dart';
-import 'package:provider/provider.dart';
+import 'package:lighthouse/views/dashboard/dashboard_tabs.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/AppConstants.dart';
-import '../models/libre_connection_model.dart';
-import 'libre_home_provider.dart';
 
 class AppAuthProvider with ChangeNotifier {
   final SharedPreferences sharedPreferences;
@@ -38,7 +36,7 @@ class AppAuthProvider with ChangeNotifier {
     } else if (password.trim().isEmpty) {
       Utils.errorSnackBar(context, "Password is Required ");
     } else {
-      loginInApp(context: context, email: email, password: password);
+      loginInApp(context: context, email: email.trim(), password: password.trim());
     }
   }
 
@@ -65,12 +63,15 @@ class AppAuthProvider with ChangeNotifier {
 
     if (result != null) {
       sharedPreferences.setString(AppConstants.ApplicationtokenKey, result["token"]);
+      sharedPreferences.setString(AppConstants.applicationuserIdKey, result["userId"].toString());
+      sharedPreferences.setString(AppConstants.nightScoutUrl, result["userDetails"]["nightscout_url"].toString());
 
       log(result.toString());
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DeviceSelectionScreen()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DashBoardTabs()));
       // checkAppSubScription(context: context, email: email, password: password, token: result["token"]);
     } else {
-      Utils.errorSnackBar(context, "Something went wrong");
+      // log("error" + result.toString());
+      Utils.errorSnackBar(context, "Invalid email or password");
       showOrHideLoader(false);
     }
 

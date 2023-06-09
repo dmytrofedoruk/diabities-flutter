@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/models/link_button_model.dart';
 import 'package:lighthouse/models/token_model.dart';
-import 'package:lighthouse/providers/homeProvider.dart';
+import 'package:lighthouse/providers/hueHomeProvider.dart';
 import 'package:lighthouse/services/hue_auth_service.dart';
 import 'package:lighthouse/views/hue_home/hue_homeScreen.dart';
 import 'package:provider/provider.dart';

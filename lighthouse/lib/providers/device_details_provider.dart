@@ -58,7 +58,7 @@ class HueDeviceDetailsProvider with ChangeNotifier {
     }
     showOrHideLoader(false);
     notifyListeners();
-   return deviceDetailsModel;
+    return deviceDetailsModel;
   }
 
   Future<void> turnOnOrOffLight({

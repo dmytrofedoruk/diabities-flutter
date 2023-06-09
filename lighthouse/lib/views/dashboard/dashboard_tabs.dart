@@ -8,6 +8,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:lighthouse/providers/dashboard_provider.dart';
 import 'package:lighthouse/views/dexcom/dexcom_screen.dart';
 import 'package:lighthouse/views/hue_home/hue_homeScreen.dart';
+import 'package:lighthouse/views/hue_home/light_sync/light_sync_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../global_widgets/bottom_bar.dart';
@@ -42,12 +43,12 @@ class _DashBoardTabsState extends State<DashBoardTabs> {
 
   final List<Widget> _widgetOptions = <Widget>[
     const LibreViewScreen(),
-    const HueScreen(),
-    Container(),
-    const DexcomHomeScreen(),
-    DeviceSettings(
+    const LightSyncScreen(),
+    const DeviceSettings(
       deviceId: "",
     ),
+    const DexcomHomeScreen(),
+    const HueScreen(),
   ];
 
   @override
@@ -69,29 +70,29 @@ class _DashBoardTabsState extends State<DashBoardTabs> {
         bottomNavigationBar: BottomBarDefault(
           items: const [
             TabItem(
-              icon: CommunityMaterialIcons.view_dashboard,
+              icon: "assets/grid.png",
               title: "Dashboard",
             ),
             TabItem(
-              icon: CommunityMaterialIcons.lightbulb,
-              title: "Phillips Hue",
+              icon: "assets/lightbulb.png",
+              title: "Lightsync",
             ),
             TabItem(
-              icon: CommunityMaterialIcons.android,
-              title: "Add",
+              icon: "assets/phone.png",
+              title: "Emergency",
             ),
             TabItem(
-              icon: CommunityMaterialIcons.sack,
-              title: "Dexcom",
+              icon: "assets/clock.png",
+              title: "CGM",
             ),
             TabItem(
-              icon: CommunityMaterialIcons.account_settings,
-              title: "Settings",
+              icon: "assets/ellipsis.png",
+              title: "More",
             ),
           ],
           backgroundColor: theme.cardColor,
           color: theme.dividerColor,
-          colorSelected: Color.fromRGBO(54, 169, 225, 1),
+          colorSelected: const Color.fromRGBO(54, 169, 225, 1),
           animated: true,
           indexSelected: Provider.of<DashBoardProvider>(context, listen: true).selectedIndex,
           iconSize: 24,

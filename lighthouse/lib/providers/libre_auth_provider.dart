@@ -86,7 +86,7 @@ class LibreAuthProvider with ChangeNotifier {
           await sharedPreferences.setString(AppConstants.libreTokenKey, libreConnectionModel?.ticket!.token ?? "");
         }
         Navigator.pop(context);
-        Provider.of<LibreHomeProvider>(context, listen: false).libreGetData(context: context);
+        Provider.of<LibreHomeProvider>(context, listen: false).libreGetDataFromServer(context: context);
 
         notifyListeners();
         Utils.successSnackBar(context, "Patient Found");

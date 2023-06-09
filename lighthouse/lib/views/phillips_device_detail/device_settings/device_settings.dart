@@ -1,25 +1,22 @@
 import 'dart:developer';
 
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lighthouse/global_widgets/custom_gradient_button.dart';
+import 'package:lighthouse/helpers/Utils.dart';
 import 'package:lighthouse/mixins/appbar_mixins.dart';
-import 'package:lighthouse/models/device_list_model.dart';
-import 'package:lighthouse/views/phillips_device_detail/colorpicker.dart';
+
+import 'package:lighthouse/providers/EmergencyCallProvider.dart';
+
 import 'package:provider/provider.dart';
 
-import '../../../global_widgets/elevated_button.dart';
+import '../../../global_widgets/gradient_container.dart';
 import '../../../global_widgets/input_text_field.dart';
-import '../../../providers/device_details_provider.dart';
-import 'device_search.dart';
 
-enum MyColors {
-  low,
-  high,
-  good,
-  extremeHigh,
-}
+import 'device_search.dart';
 
 class DeviceSettings extends StatefulWidget {
   final String deviceId;
@@ -30,77 +27,32 @@ class DeviceSettings extends StatefulWidget {
 }
 
 class _DeviceSettingsState extends State<DeviceSettings> with AppbarMixin {
+  @override
+  void initState() {
+    super.initState();
+    var provider = Provider.of<EmergencyCallProvider>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      provider.getEmergencyNumbers(context: context).then((value) {
+        if (provider.emergencyNumberModel?.phoneNumbers != null) {
+          for (var i = 0; i < provider.emergencyNumberModel!.phoneNumbers!.length; i++) {
+            addInputField();
+            inputControllersList[i].text = provider.emergencyNumberModel!.phoneNumbers![i];
+          }
+        }
+        provider.getEmergencyCallingStaus(context: context);
+      });
+    });
+  }
+
   List<TextEditingController> inputControllersList = [];
   List<InputTextField> _fields = [];
   final countryController = TextEditingController();
-  Color lowColor = Colors.red;
-  Color goodColor = Colors.green;
-  Color highColor = Colors.yellow;
-  Color extremHigh = Colors.purple;
-
-  Future<void> showColorDialog(MyColors fromString) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          // <-- SEE HERE
-          title: Text(fromString.name),
-          content: SingleChildScrollView(
-            child: ColorPicker(
-              pickerColor: fromString == MyColors.low
-                  ? lowColor
-                  : fromString == MyColors.good
-                      ? goodColor
-                      : fromString == MyColors.high
-                          ? highColor
-                          : fromString == MyColors.extremeHigh
-                              ? extremHigh
-                              : Colors.black,
-              onColorChanged: (pickedvalue) {
-                // Navigator.pop(context);
-                if (fromString == MyColors.low) {
-                  setState(() {
-                    lowColor = pickedvalue;
-                  });
-                } else if (fromString == MyColors.good) {
-                  setState(() {
-                    goodColor = pickedvalue;
-                  });
-                } else if (fromString == MyColors.high) {
-                  setState(() {
-                    highColor = pickedvalue;
-                  });
-                } else if (fromString == MyColors.extremeHigh) {
-                  setState(() {
-                    extremHigh = pickedvalue;
-                  });
-                }
-              },
-            ),
-          ),
-          actions: <Widget>[
-            // TextButton(
-            //   child: const Text('Cancel'),
-            //   onPressed: () {
-            //     Navigator.of(context).pop();
-            //   },
-            // ),
-            TextButton(
-              child: const Text('Done'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Widget _listView() {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(20),
       shrinkWrap: true,
       itemCount: _fields.length,
       itemBuilder: (context, index) {
@@ -118,27 +70,47 @@ class _DeviceSettingsState extends State<DeviceSettings> with AppbarMixin {
       enabled: true,
       controller: controller,
       decoration: InputDecoration(
-        hintText: "11111111111",
-        prefixIcon: CountryCodePicker(
-          dialogBackgroundColor: Colors.blue[900],
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Color.fromRGBO(40, 90, 159, 1)),
+            borderRadius: BorderRadius.circular(12.5),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Color.fromRGBO(40, 90, 159, 1)),
+            borderRadius: BorderRadius.circular(12.5),
+          ),
+          hintText: "Enter phone number",
+          hintStyle: TextStyle(fontSize: 13),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
+            child: Image.asset(
+              "assets/uk.png",
+              height: 15,
+              width: 15,
+              fit: BoxFit.contain,
+            ),
+          )
+          // CountryCodePicker(
+          //   dialogBackgroundColor: Colors.blue[900],
 
-          textStyle: const TextStyle(color: Colors.white),
-          onChanged: (value) {
-            log(value.dialCode.toString());
-            log(value.name.toString());
-          },
-          // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-          initialSelection: 'GB',
-          favorite: ['+1', 'FR'],
-          // optional. Shows only country name and flag
-          showCountryOnly: false,
-          // optional. Shows only country name and flag when popup is closed.
-          showOnlyCountryWhenClosed: false,
-          // optional. aligns the flag and the Text left
-          alignLeft: false,
-        ),
-      ),
-      keyboardType: TextInputType.name,
+          //   textStyle: const TextStyle(color: Colors.white),
+          //   onChanged: (value) {
+          //     log(value.dialCode.toString());
+          //     log(value.name.toString());
+          //   },
+          //   // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+          //   initialSelection: 'GB',
+          //   favorite: ['+1', 'FR'],
+          //   // optional. Shows only country name and flag
+          //   showCountryOnly: true,
+          //   showFlagMain: true,
+
+          //   // optional. Shows only country name and flag when popup is closed.
+          //   showOnlyCountryWhenClosed: false,
+          //   // optional. aligns the flag and the Text left
+          //   alignLeft: false,
+          // ),
+          ),
+      keyboardType: TextInputType.phone,
       textInputAction: TextInputAction.next,
     );
 
@@ -156,25 +128,16 @@ class _DeviceSettingsState extends State<DeviceSettings> with AppbarMixin {
   }
 
   final txtlightController = TextEditingController();
+  bool isEmergencyNumberOn = false;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Consumer<HueDeviceDetailsProvider>(builder: (context, provider, child) {
-      var device = provider.deviceDetailsModel?.data?.first;
-      // final deviceColor = colorHelper.xyToRGB(
-      //   device!.color!.xy!.x!,
-      //   device.color!.xy!.y!,
-      //   50,
-      // );
-
-      // inspect(deviceColor);
-      // provider.getcolor(device!.color!.xy!.x!, device!.color!.xy!.y!, 100);
+    return Consumer<EmergencyCallProvider>(builder: (context, provider, child) {
       var size = MediaQuery.of(context).size;
-      bool? isOn = device?.on?.on ?? false;
 
       return Scaffold(
-        appBar: baseStyleAppBar(title: "Device Settings"),
+        // appBar: baseStyleAppBar(title: "Device Settings"),
         body: Container(
           height: double.infinity,
           decoration: const BoxDecoration(
@@ -183,53 +146,76 @@ class _DeviceSettingsState extends State<DeviceSettings> with AppbarMixin {
               fit: BoxFit.cover,
             ),
           ),
-          child: provider.isLoading || device == null
+          child: provider.isLoading
               ? const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.black,
+                  child: CupertinoActivityIndicator(
+                    color: Colors.white,
                   ),
                 )
               : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        SizedBox(
+                          height: size.height * 0.1,
+                        ),
+                        Text(
+                          'LightSync Settings',
+                          style: theme.textTheme.headlineSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
                         const SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
-                        GestureDetector(
-                          onTap: () async {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HueLightSearch())).then((value) {
-                              if (value != null) {
-                                provider.getDeviceDetails(context: context, deviceId: value.rid!).then((value) {
-                                  txtlightController.text = device.metadata!.name ?? "";
-                                });
-                              }
-                              inspect(value);
-                            });
-                          },
-                          child: AbsorbPointer(
-                            child: InputTextField(
-                              enabled: false,
-                              controller: txtlightController,
-                              decoration: InputDecoration(
-                                  hintText: "Select light",
-                                  prefixIcon: Icon(
-                                    Icons.light,
-                                    color: theme.primaryColor,
-                                  )),
-                              keyboardType: TextInputType.name,
-                              textInputAction: TextInputAction.next,
-                            ),
-                          ),
+                        Text(
+                          """Lighthouse is will automatically phone you
+parents or guardian incase of an urgent low""",
+                          style: TextStyle(color: theme.primaryColor, fontSize: size.width * 0.039),
+                          textAlign: TextAlign.center,
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          """It will also send a What3Words SMS of your 
+last known location""",
+                          style: TextStyle(color: theme.primaryColor, fontSize: size.width * 0.039),
+                          textAlign: TextAlign.center,
+                        ),
+                        // GestureDetector(
+                        //   onTap: () async {
+                        //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HueLightSearch())).then((value) {
+                        //       if (value != null) {
+                        //         provider.getDeviceDetails(context: context, deviceId: value.rid!).then((value) {
+                        //           txtlightController.text = device?.metadata!.name ?? "";
+                        //         });
+                        //       }
+                        //       inspect(value);
+                        //     });
+                        //   },
+                        //   child: AbsorbPointer(
+                        //     child: InputTextField(
+                        //       enabled: false,
+                        //       controller: txtlightController,
+                        //       decoration: InputDecoration(
+                        //           hintText: "Select light",
+                        //           prefixIcon: Icon(
+                        //             Icons.light,
+                        //             color: theme.primaryColor,
+                        //           )),
+                        //       keyboardType: TextInputType.name,
+                        //       textInputAction: TextInputAction.next,
+                        //     ),
+                        //   ),
+                        // ),
                         const SizedBox(
                           height: 20,
                         ),
                         Row(
                           children: [
-                            Text("Emergnecy Contact", style: TextStyle(color: theme.primaryColor)),
+                            // Text("Emergnecy Contact", style: TextStyle(color: theme.primaryColor)),
                             const Spacer(),
                             IconButton(
                                 onPressed: () {
@@ -241,7 +227,9 @@ class _DeviceSettingsState extends State<DeviceSettings> with AppbarMixin {
                                 )),
                             IconButton(
                                 onPressed: () {
-                                  addInputField();
+                                  if (_fields.length < 4) {
+                                    addInputField();
+                                  }
                                 },
                                 icon: Icon(
                                   Icons.add,
@@ -249,112 +237,93 @@ class _DeviceSettingsState extends State<DeviceSettings> with AppbarMixin {
                                 ))
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+
                         _listView(),
                         const SizedBox(
                           height: 20,
                         ),
-                        const Text(
-                          "Set light color when Sugar Level is:-",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Low",
-                              style: TextStyle(fontSize: 18, color: theme.primaryColor),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showColorDialog(MyColors.low);
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 60,
-                                decoration: BoxDecoration(color: lowColor),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Good",
-                              style: TextStyle(fontSize: 18, color: theme.primaryColor),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showColorDialog(MyColors.good);
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 60,
-                                decoration: BoxDecoration(color: goodColor),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "High",
-                              style: TextStyle(fontSize: 18, color: theme.primaryColor),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showColorDialog(MyColors.high);
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 60,
-                                decoration: BoxDecoration(color: highColor),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Extreme High",
-                              style: TextStyle(fontSize: 18, color: theme.primaryColor),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showColorDialog(MyColors.extremeHigh);
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 60,
-                                decoration: BoxDecoration(color: extremHigh),
-                              ),
-                            )
-                          ],
-                        ),
                         const SizedBox(height: 100),
+                        Center(
+                          child: GradientContainer(
+                            radius: 40.7,
+                            paddinghorizontal: 0,
+                            paddingvertical: 0,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  "Emergency Calling",
+                                  style: GoogleFonts.inter(fontSize: 12, color: theme.primaryColor, fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Icon(
+                                  Icons.more_horiz,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  height: 35,
+                                  child: Switch.adaptive(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value) {
+                                          provider
+                                              .emergencycallingActive(
+                                            context: context,
+                                          )
+                                              .then((value) {
+                                            provider.getEmergencyCallingStaus(context: context);
+                                          });
+                                        } else {
+                                          provider
+                                              .emergencycallingInActive(
+                                            context: context,
+                                          )
+                                              .then((value) {
+                                            provider.getEmergencyCallingStaus(context: context);
+                                          });
+                                        }
+                                      });
+                                    },
+                                    value: provider.emergencyCallingActive,
+                                    activeColor: Colors.green,
+                                    activeTrackColor: const Color.fromRGBO(35, 60, 133, 1),
+                                    inactiveThumbColor: Colors.redAccent,
+                                    inactiveTrackColor: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "Emergency Calling On/Off",
+                          style: TextStyle(fontSize: 12, color: theme.primaryColor),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CustomGradientButton(
                             "Update",
                             onpressed: () {
-                              inspect(inputControllersList);
+                              if (inputControllersList.isEmpty) {
+                                Utils.errorSnackBar(context, "Please add phone number");
+                              } else {
+                                List<String> numbersList = [];
+                                for (var i = 0; i < inputControllersList.length; i++) {
+                                  numbersList.add(inputControllersList[i].text);
+                                }
+                                provider.addEmergencyNumbers(context: context, numbersList: numbersList);
+                              }
                             },
                             borderColor: Colors.transparent,
                             backgroundColor: const Color.fromRGBO(211, 243, 107, 1),

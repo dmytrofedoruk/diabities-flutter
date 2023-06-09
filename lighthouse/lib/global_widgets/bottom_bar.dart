@@ -207,42 +207,12 @@ class _BottomBarDefaultState extends State<BottomBarDefault> with TickerProvider
                               }
                             }
                           : null,
-                      child: index == 2
-                          ? Center(
-                              child: AnimatedBuilder(
-                                  animation: _animationList[index],
-                                  builder: (context, child) {
-                                    return Transform.scale(
-                                      scale: _animationList[index].value,
-                                      child: Container(
-                                          // margin: EdgeInsets.all(10),
-                                          height: 45,
-                                          width: 45,
-                                          decoration: BoxDecoration(
-                                            // color: Colors.white,
-                                            borderRadius: BorderRadius.circular(100),
-                                            gradient: const LinearGradient(
-                                                colors: [
-                                                  Color.fromRGBO(35, 60, 133, 1),
-                                                  Color.fromRGBO(46, 120, 184, 1),
-                                                ],
-                                                begin: FractionalOffset(0.0, 0.0),
-                                                end: FractionalOffset(1.0, 0.0),
-                                                stops: [0.0, 1.0],
-                                                tileMode: TileMode.clamp),
-                                          ),
-                                          child: const Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                          )),
-                                    );
-                                  }))
-                          : buildItem(
-                              context,
-                              item: widget.items[index],
-                              index: index,
-                              isSelected: index == _selectedIndex!,
-                            ),
+                      child: buildItem(
+                        context,
+                        item: widget.items[index],
+                        index: index,
+                        isSelected: index == _selectedIndex!,
+                      ),
                     ),
                   );
                 }),
@@ -404,7 +374,7 @@ class BuildLayout extends StatelessWidget {
 }
 
 class TabItem<T> {
-  final T icon;
+  final String icon;
   final String? title;
   final Widget? count;
   final String? key;
@@ -414,7 +384,7 @@ class TabItem<T> {
     this.title,
     this.count,
     this.key,
-  }) : assert(icon is IconData || icon is Widget, 'TabItem only support IconData and Widget');
+  });
 }
 
 class CountStyle {
@@ -449,9 +419,11 @@ class BuildIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget icon = Icon(
+    Widget icon = Image.asset(
       item.icon,
-      size: iconSize,
+      height: 25,
+      width: 25,
+      // size: iconSize,
       color: iconColor,
     );
     if (item.count is Widget) {
@@ -460,9 +432,9 @@ class BuildIcon extends StatelessWidget {
       return Stack(
         clipBehavior: Clip.none,
         children: [
-          Icon(
+          Image.asset(
             item.icon,
-            size: iconSize,
+            // size: iconSize,
             color: iconColor,
           ),
           PositionedDirectional(

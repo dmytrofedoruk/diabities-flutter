@@ -2,22 +2,26 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SmartDeviceBox extends StatelessWidget {
   final String smartDeviceName;
   final String iconPath;
   final String deviceType;
-  final bool powerOn;
-  void Function(bool)? onChanged;
+  final bool isSelected;
+  final bool isOn;
 
-  SmartDeviceBox({
+  final void Function()? onSaved;
+  final void Function(bool?)? onChanged;
+
+  const SmartDeviceBox({
     super.key,
     required this.smartDeviceName,
     required this.iconPath,
     required this.deviceType,
-    required this.powerOn,
+    required this.isSelected,
     required this.onChanged,
+    required this.isOn,
+    this.onSaved,
   });
 
   @override
@@ -36,67 +40,38 @@ class SmartDeviceBox extends StatelessWidget {
               stops: [0.0, 1.0],
               tileMode: TileMode.clamp),
           borderRadius: BorderRadius.circular(24),
-          color: powerOn ? Colors.grey[900] : Color.fromARGB(44, 164, 167, 189),
+          color: Colors.grey[900],
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 35.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // icon
-              Image.asset(
-                iconPath,
-                height: 50,
-                width: 50,
-                color: powerOn ? Colors.white : Colors.grey.shade700,
-              ),
-              Text(
-                smartDeviceName,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  overflow: TextOverflow.visible,
-                  fontSize: 12,
-                  color: powerOn ? Colors.white : Colors.black,
-                ),
-              ),
-              Text(
-                deviceType,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  overflow: TextOverflow.visible,
-                  fontSize: 12,
-                  color: powerOn ? Colors.white : Colors.black,
-                ),
-              ),
-
-              // smart device name + switch
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: Padding(
-              //         padding: const EdgeInsets.only(left: 25.0),
-              //         child: Text(
-              //           smartDeviceName,
-              //           style: TextStyle(
-              //             fontWeight: FontWeight.bold,
-              //             overflow: TextOverflow.visible,
-              //             fontSize: 12,
-              //             color: powerOn ? Colors.white : Colors.black,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //     // Transform.rotate(
-              //     //   angle: pi / 2,
-              //     //   child: CupertinoSwitch(
-              //     //     value: powerOn,
-              //     //     onChanged: onChanged,
-              //     //   ),
-              //     // ),
-              //   ],
-              // )
-            ],
+        child: CheckboxListTile(
+          title: Text(
+            smartDeviceName,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              overflow: TextOverflow.ellipsis,
+              fontSize: 12,
+              color: Colors.white,
+            ),
           ),
+          subtitle: Text(
+            deviceType,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              overflow: TextOverflow.visible,
+              fontSize: 10,
+              color: Colors.white,
+            ),
+          ),
+          secondary: GestureDetector(
+            onTap: onSaved,
+            child: Image.asset(
+              iconPath,
+              height: 30,
+              width: 30,
+              color: isOn ? Colors.yellow : Colors.grey,
+            ),
+          ),
+          value: isSelected,
+          onChanged: onChanged,
         ),
       ),
     );

@@ -28,7 +28,15 @@ class JoiningScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: size.height * 0.29,
+                  height: size.height * 0.20,
+                ),
+                Image.asset(
+                  "assets/logo_white.png",
+                  height: 80,
+                  width: size.width * 0.55,
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
                 ),
                 Text(
                   'Easier life with\n Diabetes',

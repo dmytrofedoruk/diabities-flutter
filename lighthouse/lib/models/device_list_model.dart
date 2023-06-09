@@ -37,6 +37,8 @@ class HueLight {
     this.services,
     this.type,
     this.idV1,
+    this.activeLight,
+    this.isSelected,
   });
 
   String? id;
@@ -45,7 +47,9 @@ class HueLight {
   Identify? identify;
   List<Service>? services;
   String? type;
+  bool? activeLight;
   String? idV1;
+  bool? isSelected;
 
   factory HueLight.fromMap(Map<String, dynamic> json) => HueLight(
         id: json["id"],
@@ -54,6 +58,7 @@ class HueLight {
         identify: json["identify"] == null ? null : Identify.fromMap(json["identify"]),
         services: json["services"] == null ? [] : List<Service>.from(json["services"]!.map((x) => Service.fromMap(x))),
         type: json["type"],
+        activeLight: json.containsKey("activeLight") ? json["activeLight"] : false,
         idV1: json["id_v1"],
       );
 

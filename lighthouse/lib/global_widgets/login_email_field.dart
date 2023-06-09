@@ -12,7 +12,7 @@ class LoginUserInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      style:const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       onChanged: (value) {
         onChanged(value);
       },
